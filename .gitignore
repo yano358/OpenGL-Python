@@ -1,0 +1,27 @@
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+.venv/
+env/
+
+# Ignore log files
+*.log
+
+# Ignore IDE or editor-specific files
+.idea/
+.vscode/
+
+# Ignore local configuration files
+.env
+config.json
+poetry.lock
+
+# Ignore example folders and task descriptions:
+grafikalaby/
+tests/
+zadania/
+examples-offical/
+examples-unofficial/
+```
