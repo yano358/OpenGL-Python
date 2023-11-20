@@ -9,13 +9,17 @@ from math import pi, sin, cos
 
 viewer = [0.0, 0.0, 10.0]
 
+
 theta = 0.0
 pix2angle = 1.0
+piy2angle = 1.0
 scale:float = 1.0
 
 left_mouse_button_pressed:bool = 0
+right_mouse_button_pressed:bool = 0
 a_key_pressed:bool = 0
 s_key_pressed:bool = 0
+
 
 mouse_x_pos_old = 0
 mouse_y_pos_old:float = 0
@@ -25,6 +29,8 @@ delta_y:float = 0.0
 
 phi:float = 0.0
 zeta:float = 0.0
+
+radius:float = 5.0
 
 def startup():
     update_viewport(None, 400, 400)
@@ -88,12 +94,9 @@ def example_object():
     glRotatef(-90, 1.0, 0.0, 0.0)
     gluDeleteQuadric(quadric)
 
-
+revert:float = 1.0
 def render(time):
-    global theta
-    global phi
-    global scale
-
+    global theta, phi, scale, revert, radius
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
@@ -103,24 +106,44 @@ def render(time):
 
     if left_mouse_button_pressed:
         theta += delta_x * pix2angle
-        phi += delta_y * pix2angle
+        phi += delta_y * piy2angle
     #glRotatef(theta, 0.0, 1.0, 0.0)
     #glRotatef(phi, 1.0, 0.0, 0.0)
 
     if a_key_pressed:
         scale+=delta_x*0.01
+    if scale>=1.5:
+        scale=1.49
     glScalef(scale,scale,scale)
 
-    if s_key_pressed:
+    if s_key_pressed and scale<1.5 and scale>0.5:
         scale-=delta_x*0.01
+    if scale<=0.5:
+        scale=0.51
     glScalef(scale,scale,scale)
 
-    viewer[0] = sin(theta * pi / 180) * cos(phi * pi / 180)
-    viewer[1] = sin(phi * pi / 180)
-    viewer[2] = cos(theta * pi / 180) * cos(phi * pi / 180)
+    if right_mouse_button_pressed:
+        if delta_x>0 and radius<10:
+            radius+=0.01
+        elif radius>=1:
+            radius-=0.01
+
+    viewer[0] = radius *sin(theta * 2*pi / 360) * cos(2*phi * pi / 360)
+    viewer[1] = radius *sin(phi * pi*2 / 360)
+    viewer[2] = radius *cos(theta * pi *2/ 360) * cos(phi * pi *2/ 360)
 
     gluLookAt(viewer[0], viewer[1], viewer[2],
-              0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+              0.0, 0.0, 0.0, 0.0, revert, 0.0)
+    
+    if phi>180:
+        revert=-1.0
+    elif phi<=-180:
+        phi+=360
+
+    if phi<-90 or phi>90:
+        revert=-1.0
+    else:
+        revert=1.0
 
     axes()
     example_object()
@@ -149,6 +172,7 @@ def update_viewport(window, width, height):
 def keyboard_key_callback(window, key, scancode, action, mods):
     global a_key_pressed
     global s_key_pressed
+    global left_mouse_button_pressed
 
     if key == GLFW_KEY_ESCAPE and action == GLFW_PRESS:
         glfwSetWindowShouldClose(window, GLFW_TRUE)
@@ -162,6 +186,11 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         s_key_pressed = 1
     else:
         s_key_pressed = 0
+
+    if key==GLFW_KEY_M and action == GLFW_PRESS:
+        left_mouse_button_pressed = 1
+    else:
+        left_mouse_button_pressed = 0
 
 
 def mouse_motion_callback(window, x_pos, y_pos):
@@ -178,12 +207,13 @@ def mouse_motion_callback(window, x_pos, y_pos):
 
 
 def mouse_button_callback(window, button, action, mods):
-    global left_mouse_button_pressed
+    global left_mouse_button_pressed, right_mouse_button_pressed
 
     if button == GLFW_MOUSE_BUTTON_LEFT and action == GLFW_PRESS:
         left_mouse_button_pressed = 1
     else:
         left_mouse_button_pressed = 0
+
 
 
 
