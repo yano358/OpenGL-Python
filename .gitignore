@@ -2,6 +2,9 @@
 __pycache__/
 *.pyc
 
+#ignore .zip files
+Lab*.zip
+
 # Ignore virtual environments
 .venv/
 env/
@@ -22,6 +25,6 @@ poetry.lock
 grafikalaby/
 tests/
 zadania/
-examples-offical/
+examples-official/
 examples-unofficial/
 ```

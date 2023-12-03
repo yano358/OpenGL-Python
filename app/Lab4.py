@@ -10,10 +10,12 @@ from math import pi, sin, cos
 viewer = [0.0, 0.0, 10.0]
 
 
-theta = 0.0
+theta = 180.0
 pix2angle = 1.0
 piy2angle = 1.0
+piz2angle = 1.0
 scale:float = 1.0
+R=15.0
 
 left_mouse_button_pressed:bool = 0
 right_mouse_button_pressed:bool = 0
@@ -23,9 +25,12 @@ s_key_pressed:bool = 0
 
 mouse_x_pos_old = 0
 mouse_y_pos_old:float = 0
-mouse_z_pos_old:float = 0
+
 delta_x = 0
 delta_y:float = 0.0
+delta_z:float = 0.0
+
+
 
 phi:float = 0.0
 zeta:float = 0.0
@@ -124,9 +129,9 @@ def render(time):
 
     if right_mouse_button_pressed:
         if delta_x>0 and radius<10:
-            radius+=0.01
+            radius+=1
         elif radius>=1:
-            radius-=0.01
+            radius-=1
 
     viewer[0] = radius *sin(theta * 2*pi / 360) * cos(2*phi * pi / 360)
     viewer[1] = radius *sin(phi * pi*2 / 360)
@@ -136,9 +141,9 @@ def render(time):
               0.0, 0.0, 0.0, 0.0, revert, 0.0)
     
     if phi>180:
-        revert=-1.0
+        phi-=360 #2*180
     elif phi<=-180:
-        phi+=360
+        phi+=360 #2*180
 
     if phi<-90 or phi>90:
         revert=-1.0
@@ -213,7 +218,6 @@ def mouse_button_callback(window, button, action, mods):
         left_mouse_button_pressed = 1
     else:
         left_mouse_button_pressed = 0
-
 
 
 
