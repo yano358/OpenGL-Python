@@ -106,8 +106,12 @@ def render(time):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
 
+    #gluLookAt(viewer[0], viewer[1], viewer[2],
+    #          0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+
     gluLookAt(viewer[0], viewer[1], viewer[2],
-              0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+              0.0, 0.0, 0.0, 0.0, revert, 0.0)
+    
 
     if left_mouse_button_pressed:
         theta += delta_x * pix2angle
@@ -133,17 +137,15 @@ def render(time):
         elif radius>=1:
             radius-=1
 
-    viewer[0] = radius *sin(theta * 2*pi / 360) * cos(2*phi * pi / 360)
+    viewer[0] = radius *cos(theta * 2*pi / 360) * cos(2*phi * pi / 360)
     viewer[1] = radius *sin(phi * pi*2 / 360)
-    viewer[2] = radius *cos(theta * pi *2/ 360) * cos(phi * pi *2/ 360)
+    viewer[2] = radius *sin(theta * pi *2/ 360) * cos(phi * pi *2/ 360)
 
-    gluLookAt(viewer[0], viewer[1], viewer[2],
-              0.0, 0.0, 0.0, 0.0, revert, 0.0)
     
     if phi>180:
-        phi-=360 #2*180
+        phi-=360 
     elif phi<=-180:
-        phi+=360 #2*180
+        phi+=360
 
     if phi<-90 or phi>90:
         revert=-1.0

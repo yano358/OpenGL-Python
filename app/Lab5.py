@@ -94,7 +94,7 @@ def startup():
 
     glShadeModel(GL_SMOOTH)
     glEnable(GL_LIGHTING)
-    #glEnable(GL_LIGHT0)
+    glEnable(GL_LIGHT0)
     glEnable(GL_LIGHT1)
 
 
